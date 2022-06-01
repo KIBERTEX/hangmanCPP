@@ -1,4 +1,8 @@
 #include <iostream>
+#include <vector>
+#include <fstream>
+#include <string>
+#include <time.h>
 using namespace std;
 
 void PrintMessage(string message, bool printTop = true, bool printBottom = true)
@@ -89,24 +93,70 @@ void PrintLetters(string input, char from, char to)
 		{
 			s += i + " ";
 			s += i;
-		}
-			
+		}		
 		else
 			s += " ";
 	}
 	PrintMessage(s, false, false);
+	return won;
 }
-void PrintAvailableletters(string taken)
+void PrintAvailableLetters(string taken)
 {
+	PrintMessage("Available letters");
 	PrintLetters(taken, 'A', 'M');
 	PrintLetters(taken, 'N', 'Z');
 }
+bool PrintWordAndCheckWin(string word, string guesses)
+{
+	bool won = true;
+	string s;
+	for (int i = 0; i < word.length(); i++)
+	{
+		if (guessed.find(word[i]) == string::npos)
+		{
+			won = false;
+			s += " ";
+		}
+		else
+		{
+			s += word[i];
+			s += " ";
+		}
+	}
+	PrintMessage(s, false);
+	return won;
+}
+string LoadRandomWords(string path)
+{
+	int lineCount = 0;
+	string word;
+	vector<string> v;
+	ifstream reader(path);
+	if (reader.is_open())
+	{
+		while (std::getline(reader, word))
+			v.push_back(word);
+
+		int randomLine = rand() % v.size();
+
+		word = v.at(randomLine);
+		reader.close();
+	}
+	return word;
+}
 int main()
 {
-	string guesses;
+	string guesses = "ABHJIKKLL";
+	string wordToGuess;
+
+	wordToGuess = LoadRandomWord("words.txt");
+	cout << wordToGuess << endl << endl;
+	
 	PrintMessage("HANG MAN");
 	DrawHangman(9);
-	PrintAvailableletters("ALEXA");
+	PrintAvailableLetters (guesses);
+	PrintMessage("Guess the word");
+	PrintWordAndCheckWin ("ALEXIS", guesses);
 	getchar();
 	return 0;
 }
